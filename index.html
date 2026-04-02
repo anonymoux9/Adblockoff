@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Turn Off Ad Blocker — Quick Guide</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+  :root {
+    /* Premium Light Theme */
+    --bg: #fbfbfd;
+    --surface: rgba(255, 255, 255, 0.75);
+    --card: #ffffff;
+    --border: rgba(0, 0, 0, 0.08);
+    --border-hover: rgba(0, 0, 0, 0.2);
+    --accent: #000000;
+    --text: #1d1d1f;
+    --muted: #86868b;
+    --step-bg: #f5f5f7;
+    --badge: rgba(0, 0, 0, 0.04);
+    --success: #34c759;
+    --trans-spring: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    --trans-fast: all 0.15s ease;
+  }
+
+  [data-theme="dark"] {
+    /* Premium Ultra-Dark Theme */
+    --bg: #000000;
+    --surface: rgba(20, 20, 20, 0.75);
+    --card: #141414;
+    --border: rgba(255, 255, 255, 0.1);
+    --border-hover: rgba(255, 255, 255, 0.25);
+    --accent: #ffffff;
+    --text: #f5f5f7;
+    --muted: #a1a1a6;
+    --step-bg: #0a0a0a;
+    --badge: rgba(255, 255, 255, 0.06);
+    --success: #30d158;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Bengali Font Override */
+  body.lang-bn {
+    font-family: 'Inter', 'Hind Siliguri', sans-serif;
+  }
+
+  /* Faded Lighting in Dark Mode */
+  .bg-glow {
+    position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+    width: 100vw; height: 100vh;
+    background: radial-gradient(circle at 50% 10%, rgba(255,255,255,0.03) 0%, transparent 60%);
+    pointer-events: none; z-index: 0;
+    opacity: 0; transition: opacity 0.5s ease;
+  }
+  [data-theme="dark"] .bg-glow { opacity: 1; }
+
+  /* GLASSMORPHISM UTILITY */
+  .glass {
+    background: var(--surface);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+
+  /* TOP BAR */
+  .topbar {
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid var(--border);
+    padding: 0 1.5rem; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em;
+    display: flex; align-items: center; gap: 0.5rem; color: var(--text);
+  }
+  .top-actions { display: flex; align-items: center; gap: 0.8rem; }
+  
+  /* Selectors & Buttons */
+  .minimal-select, .icon-btn {
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 999px; padding: 6px 14px;
+    cursor: pointer; font-size: 0.85rem; font-weight: 500;
+    color: var(--text); font-family: inherit;
+    display: flex; align-items: center; justify-content: center;
+    transition: var(--trans-spring);
+    appearance: none; outline: none;
+  }
+  .minimal-select { padding-right: 2.5rem; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>') no-repeat right 10px center; }
+  [data-theme="dark"] .minimal-select { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%23ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>'); }
+  
+  .minimal-select:hover, .icon-btn:hover { border-color: var(--border-hover); background-color: var(--badge); }
+  .minimal-select:active, .icon-btn:active { transform: scale(0.95); }
+  .icon-btn i { width: 16px; height: 16px; }
+
+  /* SCROLL PROGRESS */
+  .scroll-progress-container {
+    position: absolute; bottom: -1px; left: 0; width: 100%; height: 1px;
+    background: transparent; z-index: 101;
+  }
+  .scroll-progress-bar {
+    height: 100%; width: 0%; background: var(--accent);
+    transition: width 0.1s ease-out;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative; z-index: 1; text-align: center;
+    padding: 5rem 1.5rem 3rem;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--badge); border: 1px solid var(--border);
+    color: var(--text); border-radius: 999px;
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em;
+    padding: 6px 16px; margin-bottom: 1.5rem; text-transform: uppercase;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-badge i { width: 14px; height: 14px; }
+  .hero h1 {
+    font-size: clamp(2.2rem, 6vw, 4rem); font-weight: 700;
+    line-height: 1.1; letter-spacing: -0.03em;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .hero-sub {
+    color: var(--muted); margin-top: 1rem; font-size: 1.05rem;
+    max-width: 460px; margin-left: auto; margin-right: auto;
+    line-height: 1.5; animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  /* DEVICE PICKER */
+  .device-pick {
+    display: flex; gap: 1rem; justify-content: center;
+    margin: 2rem 1.5rem 0; animation: fadeUp 0.6s 0.3s ease both;
+  }
+  .dev-btn {
+    flex: 1; max-width: 220px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 1.8rem 1rem;
+    cursor: pointer; text-align: center;
+    transition: var(--trans-spring); color: var(--text);
+  }
+  .dev-btn i { width: 32px; height: 32px; margin-bottom: 0.8rem; opacity: 0.8; transition: var(--trans-fast); }
+  .dev-btn .dev-label { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; }
+  .dev-btn .dev-sub { font-size: 0.8rem; color: var(--muted); margin-top: 6px; }
+  .dev-btn:hover { border-color: var(--border-hover); background: var(--step-bg); transform: translateY(-2px); }
+  .dev-btn:active { transform: scale(0.96); }
+  .dev-btn.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .dev-btn.active i { opacity: 1; color: var(--accent); }
+
+  /* MAIN CONTENT */
+  .main { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem 6rem; }
+
+  /* SECTION TITLE */
+  .section-header {
+    display: flex; align-items: center; gap: 0.8rem;
+    margin: 3rem 0 1.5rem;
+  }
+  .section-header i { width: 20px; height: 20px; color: var(--muted); }
+  .section-header h2 { font-size: 1.25rem; font-weight: 600; flex: 1; letter-spacing: -0.02em; }
+  .section-header .sec-line { flex: 1; height: 1px; background: var(--border); }
+
+  /* BLOCKER CARDS GRID */
+  .blockers-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem; margin-bottom: 2rem;
+  }
+  .blocker-chip {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.2rem 0.8rem;
+    text-align: center; cursor: pointer; transition: var(--trans-spring);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;
+  }
+  .blocker-chip:hover { border-color: var(--border-hover); background: var(--step-bg); transform: translateY(-2px); }
+  .blocker-chip:active { transform: scale(0.95); }
+  .blocker-chip.active { border-color: var(--accent); background: var(--badge); box-shadow: 0 0 0 1px var(--accent); }
+  .blocker-chip i { width: 24px; height: 24px; color: var(--text); opacity: 0.8; }
+  .blocker-chip .bc-name { font-size: 0.85rem; font-weight: 500; }
+
+  /* STEPS PANEL */
+  .steps-panel { display: none; animation: fadeIn 0.4s ease; }
+  .steps-panel.visible { display: block; }
+
+  .guide-header {
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.2rem; margin-bottom: 1.5rem;
+  }
+  .guide-header .gh-icon { width: 32px; height: 32px; color: var(--text); }
+  .guide-header .gh-name { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; }
+  .guide-header .gh-desc { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+
+  .steps-list { display: flex; flex-direction: column; gap: 0; }
+  .step-item { display: flex; gap: 0; position: relative; animation: slideIn 0.4s ease both; }
+  .step-item:nth-child(2) { animation-delay: 0.05s; }
+  .step-item:nth-child(3) { animation-delay: 0.10s; }
+  .step-item:nth-child(4) { animation-delay: 0.15s; }
+  .step-item:nth-child(5) { animation-delay: 0.20s; }
+
+  .step-connector { display: flex; flex-direction: column; align-items: center; width: 48px; flex-shrink: 0; }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); color: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 700; flex-shrink: 0; z-index: 1;
+  }
+  .step-line {
+    width: 1px; flex: 1; min-height: 24px;
+    background: var(--border); margin: 8px 0; opacity: 0.8;
+  }
+  .step-item:last-child .step-line { display: none; }
+  .step-body {
+    background: var(--step-bg); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.2rem; margin-bottom: 16px; flex: 1;
+  }
+  .step-title { font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+  .step-title i { width: 16px; height: 16px; color: var(--text); opacity: 0.8; }
+  .step-desc { font-size: 0.85rem; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+  .step-path { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .path-seg {
+    background: var(--badge); border: 1px solid var(--border);
+    color: var(--text); border-radius: 8px; padding: 4px 10px;
+    font-size: 0.75rem; font-weight: 500;
+  }
+  .path-arrow i { width: 12px; height: 12px; color: var(--muted); }
+
+  /* DONE BADGE */
+  .done-badge {
+    display: flex; align-items: center; gap: 0.8rem;
+    background: var(--card); border: 1px solid var(--success);
+    border-radius: 16px; padding: 1.2rem; margin-top: 1rem;
+    color: var(--success); font-weight: 500; font-size: 0.9rem;
+  }
+  .done-badge i { width: 20px; height: 20px; }
+
+  /* PRIVATE DNS SECTION */
+  .dns-banner {
+    background: var(--step-bg); border: 1px solid var(--border);
+    border-radius: 20px; padding: 1.8rem; margin-top: 3rem;
+  }
+  .dns-banner-head { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
+  .dns-icon-wrap {
+    width: 44px; height: 44px; border-radius: 12px; flex-shrink:0;
+    background: var(--badge); display: flex; align-items: center; justify-content: center;
+  }
+  .dns-icon-wrap i { width: 20px; height: 20px; color: var(--text); }
+  .dns-banner-head h3 { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; margin-bottom:4px;}
+  .dns-banner-head p { font-size: 0.85rem; color: var(--muted); line-height: 1.5;}
+  .dns-why {
+    background: var(--card); border-radius: 12px; padding: 1rem;
+    font-size: 0.85rem; color: var(--muted); line-height: 1.6;
+    margin-bottom: 1.5rem; border: 1px solid var(--border);
+  }
+  .dns-why strong { color: var(--text); font-weight: 600; }
+
+  /* CONTENT SECTIONS */
+  .content-section { display: none; }
+  .content-section.visible { display: block; animation: fadeIn 0.4s ease; }
+
+  /* INFO TIP */
+  .info-tip {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1rem; font-size: 0.85rem;
+    color: var(--muted); margin: 1rem 0 2rem; line-height: 1.5;
+  }
+  .info-tip i { width: 18px; height: 18px; color: var(--text); flex-shrink:0; margin-top:2px;}
+  .info-tip strong { color: var(--text); font-weight: 600;}
+
+  /* BROWSER TABS */
+  .browser-tabs { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .br-tab {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 999px; padding: 8px 16px;
+    cursor: pointer; font-size: 0.85rem; font-weight: 500;
+    transition: var(--trans-spring); color: var(--muted);
+  }
+  .br-tab:hover { border-color: var(--border-hover); background: var(--step-bg); }
+  .br-tab:active { transform: scale(0.95); }
+  .br-tab.active { border-color: var(--accent); color: var(--bg); background: var(--accent); }
+  .br-tab i { width: 16px; height: 16px; }
+
+  .br-panel { display: none; animation: fadeIn 0.4s ease; }
+  .br-panel.active { display: block; }
+
+  /* SCROLL TO TOP */
+  .scroll-top-btn {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 90;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); display: flex; align-items: center; justify-content: center;
+    cursor: pointer; opacity: 0; pointer-events: none; transform: translateY(20px) scale(0.9);
+    transition: var(--trans-spring);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  }
+  .scroll-top-btn.visible { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+  .scroll-top-btn:hover { border-color: var(--border-hover); background: var(--card); }
+  .scroll-top-btn:active { transform: scale(0.9); }
+  .scroll-top-btn i { width: 20px; height: 20px; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-12px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* MOBILE TWEAKS */
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 2.2rem; }
+    .device-pick { flex-direction: column; }
+    .dev-btn { max-width: 100%; padding: 1.2rem; display: flex; align-items: center; text-align: left; gap: 1rem;}
+    .dev-btn i { margin-bottom: 0; }
+    .dev-btn .dev-sub { margin-top: 2px; }
+    .blockers-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+    .scroll-top-btn { bottom: 1.5rem; right: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<!-- TOP BAR -->
+<nav class="topbar glass">
+  <div class="logo">
+    <i data-lucide="shield-off"></i>
+    <span data-i18n="logo">AdBlockOff</span>
+  </div>
+  <div class="top-actions">
+    <select class="minimal-select" id="langSelect" onchange="changeLanguage(this.value)">
+      <option value="en">English</option>
+      <option value="bn">বাংলা</option>
+    </select>
+    <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle Theme">
+      <i data-lucide="sun" id="themeIcon"></i>
+    </button>
+  </div>
+  <div class="scroll-progress-container"><div class="scroll-progress-bar" id="scrollProgress"></div></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><i data-lucide="zap"></i> <span data-i18n="heroBadge">Quick Fix Guide</span></div>
+  <h1 data-i18n="heroTitle">Turn Off Your<br/>Ad Blocker</h1>
+  <p class="hero-sub" data-i18n="heroSub">Step-by-step visual guide. No tech jargon. Just tap &amp; follow.</p>
+</section>
+
+<!-- DEVICE PICKER -->
+<div class="device-pick">
+  <button class="dev-btn" id="btn-mobile" onclick="selectDevice('mobile')">
+    <i data-lucide="smartphone"></i>
+    <div>
+      <div class="dev-label" data-i18n="devMobile">Mobile</div>
+      <div class="dev-sub" data-i18n="devMobileSub">Android / iOS</div>
+    </div>
+  </button>
+  <button class="dev-btn" id="btn-desktop" onclick="selectDevice('desktop')">
+    <i data-lucide="monitor"></i>
+    <div>
+      <div class="dev-label" data-i18n="devDesktop">Desktop</div>
+      <div class="dev-sub" data-i18n="devDesktopSub">Windows / Mac</div>
+    </div>
+  </button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- ═══ MOBILE SECTION ═══ -->
+  <div class="content-section" id="section-mobile">
+
+    <div class="section-header">
+      <i data-lucide="smartphone"></i>
+      <h2 data-i18n="secMobile">Mobile Ad Blockers</h2>
+      <div class="sec-line"></div>
+    </div>
+
+    <div class="info-tip">
+      <i data-lucide="mouse-pointer-click"></i>
+      <span data-i18n="tipMobile"><strong>Tap</strong> your ad blocker below to see the exact steps to disable it.</span>
+    </div>
+
+    <div class="blockers-grid">
+      <div class="blocker-chip" onclick="showGuide('mobile','brave')">
+        <i data-lucide="compass"></i><div class="bc-name">Brave Browser</div>
+      </div>
+      <div class="blocker-chip" onclick="showGuide('mobile','ublock')">
+        <i data-lucide="hexagon"></i><div class="bc-name">uBlock Origin</div>
+      </div>
+      <div class="blocker-chip" onclick="showGuide('mobile','adblock')">
+        <i data-lucide="shield"></i><div class="bc-name">AdBlock</div>
+      </div>
+      <div class="blocker-chip" onclick="showGuide('mobile','adblockplus')">
+        <i data-lucide="shield-plus"></i><div class="bc-name">Adblock Plus</div>
+      </div>
+      <div class="blocker-chip" onclick="showGuide('mobile','samsung')">
+        <i data-lucide="globe"></i><div class="bc-name">Samsung Browser</div>
+      </div>
+      <div class="blocker-chip" onclick="showGuide('mobile','firefox')">
+        <i data-lucide="flame"></i><div class="bc-name">Firefox Mobile</div>
+      </div>
+    </div>
+
+    <!-- Mobile Guide Output -->
+    <div id="guide-mobile" class="steps-panel"></div>
+
+    <!-- PRIVATE DNS SECTION -->
+    <div class="dns-banner" id="dns-section" style="display:none">
+      <div class="dns-banner-head">
+        <div class="dns-icon-wrap"><i data-lucide="lock"></i></div>
+        <div>
+          <h3 data-i18n="dnsTitle">Private DNS — Also Blocking Ads?</h3>
+          <p data-i18n="dnsSub">Android system-level ad filtering</p>
+        </div>
+      </div>
+      <div class="dns-why" data-i18n="dnsWhy">
+        <strong>What is Private DNS?</strong><br/>
+        Some Android phones use a custom DNS like dns.adguard.com which blocks ads at the network level. Turning it off restores normal browsing.
+      </div>
+
+      <div class="section-header" style="margin: 1rem 0 1.5rem">
+        <i data-lucide="settings"></i>
+        <h2 style="font-size:1.1rem" data-i18n="dnsStepsTitle">Disable Private DNS (Android)</h2>
+      </div>
+
+      <div class="steps-list" id="dns-steps-container">
+        <!-- Rendered via JS -->
+      </div>
+      <div class="done-badge"><i data-lucide="check-circle"></i> <span data-i18n="dnsDone">DNS-level ad blocking disabled!</span></div>
+    </div>
+  </div>
+
+  <!-- ═══ DESKTOP SECTION ═══ -->
+  <div class="content-section" id="section-desktop">
+
+    <div class="section-header">
+      <i data-lucide="monitor"></i>
+      <h2 data-i18n="secDesktop">Choose Your Browser</h2>
+      <div class="sec-line"></div>
+    </div>
+
+    <div class="info-tip">
+      <i data-lucide="mouse-pointer-click"></i>
+      <span data-i18n="tipDesktop"><strong>Select</strong> your browser first, then choose which ad blocker to disable.</span>
+    </div>
+
+    <!-- Browser Tabs -->
+    <div class="browser-tabs">
+      <button class="br-tab active" onclick="switchBrowser('chrome')" id="br-chrome"><i data-lucide="chrome"></i> Chrome</button>
+      <button class="br-tab" onclick="switchBrowser('firefox')" id="br-firefox"><i data-lucide="flame"></i> Firefox</button>
+      <button class="br-tab" onclick="switchBrowser('brave')" id="br-brave"><i data-lucide="compass"></i> Brave</button>
+      <button class="br-tab" onclick="switchBrowser('edge')" id="br-edge"><i data-lucide="app-window"></i> Edge</button>
+      <button class="br-tab" onclick="switchBrowser('safari')" id="br-safari"><i data-lucide="compass"></i> Safari</button>
+    </div>
+
+    <!-- CHROME -->
+    <div class="br-panel active" id="panel-chrome">
+      <div class="section-header" style="margin-top:1rem">
+        <i data-lucide="puzzle"></i><h2 style="font-size:1.1rem" data-i18n="secExtChrome">Chrome — Pick Extension</h2><div class="sec-line"></div>
+      </div>
+      <div class="blockers-grid">
+        <div class="blocker-chip" onclick="showGuide('desktop-chrome','ublock')"><i data-lucide="hexagon"></i><div class="bc-name">uBlock Origin</div></div>
+        <div class="blocker-chip" onclick="showGuide('desktop-chrome','adblock')"><i data-lucide="shield"></i><div class="bc-name">AdBlock</div></div>
+        <div class="blocker-chip" onclick="showGuide('desktop-chrome','adblockplus')"><i data-lucide="shield-plus"></i><div class="bc-name">Adblock Plus</div></div>
+        <div class="blocker-chip" onclick="showGuide('desktop-chrome','ghostery')"><i data-lucide="ghost"></i><div class="bc-name">Ghostery</div></div>
+      </div>
+      <div id="guide-desktop-chrome" class="steps-panel"></div>
+    </div>
+
+    <!-- FIREFOX -->
+    <div class="br-panel" id="panel-firefox">
+      <div class="section-header" style="margin-top:1rem">
+        <i data-lucide="puzzle"></i><h2 style="font-size:1.1rem" data-i18n="secExtFirefox">Firefox — Pick Extension</h2><div class="sec-line"></div>
+      </div>
+      <div class="blockers-grid">
+        <div class="blocker-chip" onclick="showGuide('desktop-firefox','ublock')"><i data-lucide="hexagon"></i><div class="bc-name">uBlock Origin</div></div>
+        <div class="blocker-chip" onclick="showGuide('desktop-firefox','adblock')"><i data-lucide="shield"></i><div class="bc-name">AdBlock</div></div>
+        <div class="blocker-chip" onclick="showGuide('desktop-firefox','adblockplus')"><i data-lucide="shield-plus"></i><div class="bc-name">Adblock Plus</div></div>
+      </div>
+      <div id="guide-desktop-firefox" class="steps-panel"></div>
+    </div>
+
+    <!-- BRAVE -->
+    <div class="br-panel" id="panel-brave">
+      <div class="section-header" style="margin-top:1rem">
+        <i data-lucide="shield"></i><h2 style="font-size:1.1rem" data-i18n="secBraveBuiltin">Brave Built-in Shields</h2><div class="sec-line"></div>
+      </div>
+      <div id="guide-desktop-brave-builtin" class="steps-panel visible"></div>
+
+      <div class="section-header" style="margin-top:2rem">
+        <i data-lucide="puzzle"></i><h2 style="font-size:1.1rem" data-i18n="secExtAlso">Also using an Extension?</h2><div class="sec-line"></div>
+      </div>
+      <div class="blockers-grid">
+        <div class="blocker-chip" onclick="showGuide('desktop-brave','ublock')"><i data-lucide="hexagon"></i><div class="bc-name">uBlock Origin</div></div>
+        <div class="blocker-chip" onclick="showGuide('desktop-brave','adblock')"><i data-lucide="shield"></i><div class="bc-name">AdBlock</div></div>
+      </div>
+      <div id="guide-desktop-brave" class="steps-panel"></div>
+    </div>
+
+    <!-- EDGE -->
+    <div class="br-panel" id="panel-edge">
+      <div class="section-header" style="margin-top:1rem">
+        <i data-lucide="puzzle"></i><h2 style="font-size:1.1rem" data-i18n="secExtEdge">Edge — Pick Extension</h2><div class="sec-line"></div>
+      </div>
+      <div class="blockers-grid">
+        <div class="blocker-chip" onclick="showGuide('desktop-edge','ublock')"><i data-lucide="hexagon"></i><div class="bc-name">uBlock Origin</div></div>
+        <div class="blocker-chip" onclick="showGuide('desktop-edge','adblock')"><i data-lucide="shield"></i><div class="bc-name">AdBlock</div></div>
+        <div class="blocker-chip" onclick="showGuide('desktop-edge','adblockplus')"><i data-lucide="shield-plus"></i><div class="bc-name">Adblock Plus</div></div>
+      </div>
+      <div id="guide-desktop-edge" class="steps-panel"></div>
+    </div>
+
+    <!-- SAFARI -->
+    <div class="br-panel" id="panel-safari">
+      <div class="section-header" style="margin-top:1rem">
+        <i data-lucide="settings"></i><h2 style="font-size:1.1rem" data-i18n="secSafari">Safari — Extension Manager</h2><div class="sec-line"></div>
+      </div>
+      <div id="guide-desktop-safari-builtin" class="steps-panel visible"></div>
+    </div>
+
+  </div><!-- end desktop section -->
+
+</div><!-- end main -->
+
+<!-- Scroll to Top -->
+<button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Scroll to top">
+  <i data-lucide="arrow-up"></i>
+</button>
+
+<script>
+// ═══ STATE ═══
+let currentLang = 'en';
+let activeGuides = { mobile: null, desktop: null }; // Tracks open guide in each context
+
+// ═══ TRANSLATIONS (i18n) ═══
+const i18n = {
+  en: {
+    logo: "AdBlockOff",
+    heroBadge: "Quick Fix Guide",
+    heroTitle: "Turn Off Your<br/>Ad Blocker",
+    heroSub: "Step-by-step visual guide. No tech jargon. Just tap & follow.",
+    devMobile: "Mobile", devMobileSub: "Android / iOS",
+    devDesktop: "Desktop", devDesktopSub: "Windows / Mac",
+    secMobile: "Mobile Ad Blockers",
+    tipMobile: "<strong>Tap</strong> your ad blocker below to see the exact steps to disable it.",
+    dnsTitle: "Private DNS — Also Blocking Ads?",
+    dnsSub: "Android system-level ad filtering",
+    dnsWhy: "<strong>What is Private DNS?</strong><br/>Some Android phones use a custom DNS like dns.adguard.com which blocks ads at the network level. Turning it off restores normal browsing.",
+    dnsStepsTitle: "Disable Private DNS (Android)",
+    dnsDone: "DNS-level ad blocking disabled!",
+    secDesktop: "Choose Your Browser",
+    tipDesktop: "<strong>Select</strong> your browser first, then choose which ad blocker to disable.",
+    secExtChrome: "Chrome — Pick Extension",
+    secExtFirefox: "Firefox — Pick Extension",
+    secBraveBuiltin: "Brave Built-in Shields",
+    secExtAlso: "Also using an Extension?",
+    secExtEdge: "Edge — Pick Extension",
+    secSafari: "Safari — Extension Manager",
+    doneBadge: "Done! Reload the page to see the result.",
+    
+    // Desktop Generic Strings
+    desktopExtTitle: "Open {browser} Extensions",
+    desktopExtDesc: "Click the <strong>puzzle piece icon</strong> or go to your extensions.",
+    desktopFindTitle: "Find {name}",
+    desktopFindDesc: "Locate <strong>{name}</strong> in the list.",
+    desktopToggleTitle: "Click the Toggle",
+    desktopToggleDesc: "Click to <strong>disable</strong> it or choose <strong>Manage Extension</strong>.",
+    desktopReloadTitle: "Reload the Page",
+    desktopReloadDesc: "Press <strong>F5</strong> or click the reload icon in your browser."
+  },
+  bn: {
+    logo: "AdBlockOff",
+    heroBadge: "দ্রুত সমাধান গাইড",
+    heroTitle: "আপনার Ad Blocker<br/>অফ করুন",
+    heroSub: "ধাপে ধাপে ভিজ্যুয়াল গাইড। কোনো টেকনিক্যাল জটিলতা নেই। শুধু ট্যাপ করুন এবং অনুসরণ করুন।",
+    devMobile: "মোবাইল", devMobileSub: "Android / iOS",
+    devDesktop: "ডেস্কটপ", devDesktopSub: "Windows / Mac",
+    secMobile: "মোবাইল Ad Blockers",
+    tipMobile: "আপনার ad blocker-এ <strong>ট্যাপ</strong> করে এটি অফ করার সঠিক ধাপগুলো জেনে নিন।",
+    dnsTitle: "Private DNS — এটিও কি Ads ব্লক করছে?",
+    dnsSub: "Android সিস্টেম-লেভেল ad ফিল্টারিং",
+    dnsWhy: "<strong>Private DNS কী?</strong><br/>কিছু Android ফোনে dns.adguard.com এর মতো কাস্টম DNS ব্যবহার করা হয় যা নেটওয়ার্ক লেভেলে ad ব্লক করে। এটি অফ করলে ওয়েবসাইট স্বাভাবিকভাবে কাজ করবে।",
+    dnsStepsTitle: "Private DNS অফ করুন (Android)",
+    dnsDone: "DNS-লেভেল ad ব্লকিং অফ করা হয়েছে!",
+    secDesktop: "আপনার Browser নির্বাচন করুন",
+    tipDesktop: "প্রথমে আপনার browser <strong>নির্বাচন</strong> করুন, তারপর কোন ad blocker অফ করবেন তা ঠিক করুন।",
+    secExtChrome: "Chrome — Extension নির্বাচন করুন",
+    secExtFirefox: "Firefox — Extension নির্বাচন করুন",
+    secBraveBuiltin: "Brave Built-in Shields",
+    secExtAlso: "অন্য কোনো Extension ব্যবহার করছেন?",
+    secExtEdge: "Edge — Extension নির্বাচন করুন",
+    secSafari: "Safari — Extension Manager",
+    doneBadge: "সম্পন্ন! ফলাফল দেখতে পেজটি Reload করুন।",
+
+    // Desktop Generic Strings
+    desktopExtTitle: "{browser} Extensions খুলুন",
+    desktopExtDesc: "<strong>পাজল (puzzle) আইকনে</strong> ক্লিক করুন বা extensions অপশনে যান।",
+    desktopFindTitle: "{name} খুঁজে বের করুন",
+    desktopFindDesc: "লিস্ট থেকে <strong>{name}</strong> খুঁজে বের করুন।",
+    desktopToggleTitle: "Toggle-এ ক্লিক করুন",
+    desktopToggleDesc: "এটি <strong>অফ (disable)</strong> করতে টগল করুন বা <strong>Manage Extension</strong> বেছে নিন।",
+    desktopReloadTitle: "পেজটি Reload করুন",
+    desktopReloadDesc: "আপনার ব্রাউজারে <strong>F5</strong> চাপুন বা reload আইকনে ক্লিক করুন।"
+  }
+};
+
+// ═══ GUIDE DATA ═══
+const guidesData = {
+  ublock: {
+    icon: 'hexagon', name: 'uBlock Origin',
+    en: { desc: 'Popular open-source ad blocker' },
+    bn: { desc: 'জনপ্রিয় ওপেন-সোর্স ad blocker' },
+    mobile: {
+      en: [
+        { icon: 'flame', title: 'Open Firefox Mobile', desc: 'uBlock Origin works via Firefox for Android. Open the app.' },
+        { icon: 'more-vertical', title: 'Tap Menu', desc: 'Tap the <strong>three-dot menu</strong> → <strong>Add-ons</strong>, find uBlock.' },
+        { icon: 'power', title: 'Tap Power Button', desc: 'Inside the panel, tap the big <strong>blue power button</strong> to pause.' },
+        { icon: 'refresh-cw', title: 'Reload', desc: 'Tap reload. Ads should now appear.' }
+      ],
+      bn: [
+        { icon: 'flame', title: 'Firefox Mobile ওপেন করুন', desc: 'uBlock Origin মূলত Firefox-এ কাজ করে। অ্যাপটি ওপেন করুন।' },
+        { icon: 'more-vertical', title: 'Menu-তে ট্যাপ করুন', desc: '<strong>থ্রি-ডট মেনু</strong> → <strong>Add-ons</strong> এ গিয়ে uBlock খুঁজুন।' },
+        { icon: 'power', title: 'Power বাটনে ট্যাপ করুন', desc: 'প্যানেলের ভেতরে থাকা বড় <strong>নীল পাওয়ার বাটনটি</strong> অফ করুন।' },
+        { icon: 'refresh-cw', title: 'Reload করুন', desc: 'পেজ রিলোড করুন। এখন Ads দেখা যাবে।' }
+      ]
+    }
+  },
+  adblock: {
+    icon: 'shield', name: 'AdBlock',
+    en: { desc: 'One of the most used ad blockers' },
+    bn: { desc: 'সবচেয়ে বেশি ব্যবহৃত ad blocker' },
+    mobile: {
+      en: [
+        { icon: 'smartphone', title: 'Open Browser', desc: 'Open the browser where AdBlock is installed.' },
+        { icon: 'shield', title: 'Tap AdBlock Icon', desc: 'Tap the AdBlock icon in the toolbar.' },
+        { icon: 'pause', title: 'Pause on This Site', desc: 'Tap <strong>Pause on this site</strong>.' },
+        { icon: 'refresh-cw', title: 'Reload', desc: 'Refresh the page.' }
+      ],
+      bn: [
+        { icon: 'smartphone', title: 'Browser ওপেন করুন', desc: 'যেখানে AdBlock ইনস্টল করা আছে সেই ব্রাউজারটি ওপেন করুন।' },
+        { icon: 'shield', title: 'AdBlock আইকনে ট্যাপ করুন', desc: 'টুলবারে থাকা AdBlock আইকনে ট্যাপ করুন।' },
+        { icon: 'pause', title: 'Pause on This Site নির্বাচন করুন', desc: '<strong>Pause on this site</strong> এ ট্যাপ করুন।' },
+        { icon: 'refresh-cw', title: 'Reload করুন', desc: 'পেজটি রিফ্রেশ করুন।' }
+      ]
+    }
+  },
+  adblockplus: {
+    icon: 'shield-plus', name: 'Adblock Plus',
+    en: { desc: 'ABP with Acceptable Ads' },
+    bn: { desc: 'ABP (Acceptable Ads সহ)' },
+    mobile: {
+      en: [
+        { icon: 'smartphone', title: 'Open Browser', desc: 'Open the browser app with ABP active.' },
+        { icon: 'shield-plus', title: 'Tap ABP Icon', desc: 'Tap the Adblock Plus icon.' },
+        { icon: 'toggle-left', title: 'Disable', desc: 'Tap <strong>Disable on this website</strong>.' },
+        { icon: 'refresh-cw', title: 'Refresh', desc: 'Reload the page.' }
+      ],
+      bn: [
+        { icon: 'smartphone', title: 'Browser ওপেন করুন', desc: 'ABP চালু থাকা ব্রাউজার অ্যাপটি ওপেন করুন।' },
+        { icon: 'shield-plus', title: 'ABP আইকনে ট্যাপ করুন', desc: 'Adblock Plus আইকনে ট্যাপ করুন।' },
+        { icon: 'toggle-left', title: 'Disable করুন', desc: '<strong>Disable on this website</strong> টগলে ট্যাপ করুন।' },
+        { icon: 'refresh-cw', title: 'Refresh করুন', desc: 'পেজটি রিলোড করুন।' }
+      ]
+    }
+  },
+  brave: {
+    icon: 'compass', name: 'Brave Browser',
+    en: { desc: 'Built-in Shields (no extension)' },
+    bn: { desc: 'Built-in Shields (কোনো extension ছাড়া)' },
+    mobile: {
+      en: [
+        { icon: 'compass', title: 'Open Website in Brave', desc: 'Navigate to the website.' },
+        { icon: 'shield', title: 'Tap Lion Icon', desc: 'Tap the <strong>Brave lion shield icon</strong> in the address bar.' },
+        { icon: 'toggle-left', title: 'Toggle Shields OFF', desc: 'Flip the Shields toggle off.' },
+        { icon: 'check-circle', title: 'Auto Reload', desc: 'The page will automatically reload.' }
+      ],
+      bn: [
+        { icon: 'compass', title: 'Brave-এ ওয়েবসাইট ওপেন করুন', desc: 'ওয়েবসাইটটিতে প্রবেশ করুন।' },
+        { icon: 'shield', title: 'Lion আইকনে ট্যাপ করুন', desc: 'অ্যাড্রেস বারে থাকা <strong>Brave lion shield আইকনে</strong> ট্যাপ করুন।' },
+        { icon: 'toggle-left', title: 'Shields অফ করুন', desc: 'Shields টগলটি অফ (OFF) করে দিন।' },
+        { icon: 'check-circle', title: 'অটো Reload', desc: 'পেজটি স্বয়ংক্রিয়ভাবে রিলোড হবে।' }
+      ]
+    }
+  },
+  samsung: {
+    icon: 'globe', name: 'Samsung Browser',
+    en: { desc: 'Samsung built-in ad blocking' },
+    bn: { desc: 'Samsung এর built-in ad blocking' },
+    mobile: {
+      en: [
+        { icon: 'globe', title: 'Open Samsung Internet', desc: 'Open the app on your device.' },
+        { icon: 'menu', title: 'Tap Menu', desc: 'Tap the <strong>three-bar menu (≡)</strong>.' },
+        { icon: 'puzzle', title: 'Go to Ad Blockers', desc: 'Tap <strong>Ad Blockers</strong>.' },
+        { icon: 'toggle-left', title: 'Disable', desc: 'Toggle off the active blocker.' }
+      ],
+      bn: [
+        { icon: 'globe', title: 'Samsung Internet ওপেন করুন', desc: 'আপনার ডিভাইসে অ্যাপটি ওপেন করুন।' },
+        { icon: 'menu', title: 'Menu-তে ট্যাপ করুন', desc: 'নিচে ডানদিকে <strong>থ্রি-বার মেনুতে (≡)</strong> ট্যাপ করুন।' },
+        { icon: 'puzzle', title: 'Ad Blockers এ যান', desc: '<strong>Ad Blockers</strong> অপশনে ট্যাপ করুন।' },
+        { icon: 'toggle-left', title: 'Disable করুন', desc: 'চালু থাকা blocker-টি টগল করে অফ করুন।' }
+      ]
+    }
+  },
+  firefox: {
+    icon: 'flame', name: 'Firefox Mobile',
+    en: { desc: 'Extensions via Firefox for Android' },
+    bn: { desc: 'Android-এর জন্য Firefox Extensions' },
+    mobile: {
+      en: [
+        { icon: 'flame', title: 'Open Firefox', desc: 'Launch Firefox on your phone.' },
+        { icon: 'more-vertical', title: 'Tap Menu', desc: 'Tap the <strong>⋮ menu</strong> icon.' },
+        { icon: 'puzzle', title: 'Tap Add-ons', desc: 'Select <strong>Add-ons</strong> and find your blocker.' },
+        { icon: 'toggle-left', title: 'Disable It', desc: 'Toggle it <strong>off</strong>.' }
+      ],
+      bn: [
+        { icon: 'flame', title: 'Firefox ওপেন করুন', desc: 'আপনার ফোনে Firefox চালু করুন।' },
+        { icon: 'more-vertical', title: 'Menu-তে ট্যাপ করুন', desc: '<strong>⋮ মেনু</strong> আইকনে ট্যাপ করুন।' },
+        { icon: 'puzzle', title: 'Add-ons এ যান', desc: '<strong>Add-ons</strong> নির্বাচন করুন এবং আপনার blocker খুঁজুন।' },
+        { icon: 'toggle-left', title: 'অফ করুন', desc: 'টগলটি <strong>অফ</strong> করে দিন।' }
+      ]
+    }
+  },
+  ghostery: {
+    icon: 'ghost', name: 'Ghostery',
+    en: { desc: 'Privacy & tracker blocker' },
+    bn: { desc: 'Privacy & tracker blocker' },
+    desktop: {
+      en: [
+        { icon: 'ghost', title: 'Click Ghostery Icon', desc: 'Click the icon in your toolbar.' },
+        { icon: 'check-circle', title: 'Trust Site', desc: 'Click <strong>Trust Site</strong> to whitelist.' },
+        { icon: 'refresh-cw', title: 'Reload', desc: 'Press F5 or reload.' }
+      ],
+      bn: [
+        { icon: 'ghost', title: 'Ghostery আইকনে ক্লিক করুন', desc: 'আপনার টুলবারের আইকনে ক্লিক করুন।' },
+        { icon: 'check-circle', title: 'Trust Site নির্বাচন করুন', desc: 'হোয়াইটলিস্ট করতে <strong>Trust Site</strong> এ ক্লিক করুন।' },
+        { icon: 'refresh-cw', title: 'Reload করুন', desc: 'F5 চাপুন বা রিলোড করুন।' }
+      ]
+    }
+  }
+};
+
+const extraBuiltInGuides = {
+  dns: {
+    en: [
+      { icon: 'settings', title: 'Open Settings', desc: 'Open your Android <strong>Settings</strong> app.', path: [] },
+      { icon: 'search', title: 'Search "Private DNS"', desc: 'Type <strong>Private DNS</strong> in the search bar.', path: ['Settings', '›', 'Search'] },
+      { icon: 'toggle-left', title: 'Set to "Automatic" or "Off"', desc: 'Select <strong>Automatic</strong> or <strong>Off</strong> and Save.', path: [] },
+      { icon: 'refresh-cw', title: 'Refresh Browser', desc: 'Close and reopen your browser.', path: [] }
+    ],
+    bn: [
+      { icon: 'settings', title: 'Settings ওপেন করুন', desc: 'আপনার Android-এর <strong>Settings</strong> অ্যাপ ওপেন করুন।', path: [] },
+      { icon: 'search', title: '"Private DNS" লিখে সার্চ করুন', desc: 'সার্চ বারে <strong>Private DNS</strong> টাইপ করুন।', path: ['Settings', '›', 'Search'] },
+      { icon: 'toggle-left', title: '"Automatic" বা "Off" করুন', desc: '<strong>Automatic</strong> অথবা <strong>Off</strong> নির্বাচন করে Save করুন।', path: [] },
+      { icon: 'refresh-cw', title: 'Browser রিফ্রেশ করুন', desc: 'ব্রাউজারটি বন্ধ করে পুনরায় ওপেন করুন।', path: [] }
+    ]
+  },
+  braveDesktop: {
+    icon: 'shield', name: 'Brave Shields (Built-in)', 
+    en: { desc: 'Native ad blocker — no extension needed' },
+    bn: { desc: 'নেটিভ ad blocker — কোনো extension প্রয়োজন নেই' },
+    steps: {
+      en: [
+        { icon: 'globe', title: 'Visit Website', desc: 'Navigate to the site.' },
+        { icon: 'compass', title: 'Click Lion Icon', desc: 'Click the <strong>lion icon</strong> in address bar.' },
+        { icon: 'toggle-left', title: 'Toggle Shields OFF', desc: 'Turn it off for this site.' },
+        { icon: 'check-circle', title: 'Auto Reloads', desc: 'Page will refresh automatically.' }
+      ],
+      bn: [
+        { icon: 'globe', title: 'ওয়েবসাইট ভিজিট করুন', desc: 'সাইটটিতে প্রবেশ করুন।' },
+        { icon: 'compass', title: 'Lion আইকনে ক্লিক করুন', desc: 'অ্যাড্রেস বারের <strong>lion আইকনে</strong> ক্লিক করুন।' },
+        { icon: 'toggle-left', title: 'Shields অফ করুন', desc: 'এই সাইটের জন্য টগল অফ করুন।' },
+        { icon: 'check-circle', title: 'অটো Reload', desc: 'পেজটি স্বয়ংক্রিয়ভাবে রিলোড হবে।' }
+      ]
+    }
+  },
+  safariDesktop: {
+    icon: 'compass', name: 'Safari Extensions (macOS)',
+    en: { desc: 'Manage blockers from Preferences' },
+    bn: { desc: 'Preferences থেকে blocker ম্যানেজ করুন' },
+    steps: {
+      en: [
+        { icon: 'compass', title: 'Open Safari Menu', desc: 'Click <strong>Safari</strong> in the top menu.' },
+        { icon: 'settings', title: 'Go to Settings', desc: 'Click Settings/Preferences → Extensions tab.' },
+        { icon: 'square-dashed', title: 'Uncheck Blocker', desc: '<strong>Uncheck</strong> your ad blocker.' },
+        { icon: 'refresh-cw', title: 'Reload Page', desc: 'Press <strong>Cmd + R</strong>.' }
+      ],
+      bn: [
+        { icon: 'compass', title: 'Safari Menu ওপেন করুন', desc: 'উপরের মেনু থেকে <strong>Safari</strong> তে ক্লিক করুন।' },
+        { icon: 'settings', title: 'Settings-এ যান', desc: 'Settings/Preferences → Extensions ট্যাবে যান।' },
+        { icon: 'square-dashed', title: 'Blocker আনচেক করুন', desc: 'আপনার ad blocker-এর টিকচিহ্ন <strong>তুলে দিন (uncheck)</strong>।' },
+        { icon: 'refresh-cw', title: 'পেজ Reload করুন', desc: '<strong>Cmd + R</strong> চাপুন।' }
+      ]
+    }
+  }
+}
+
+
+// ═══ CORE LOGIC ═══
+
+function getDesktopSteps(bData, browserNameStr, lang) {
+  if (bData.desktop && bData.desktop[lang]) return bData.desktop[lang];
+  // Generic fallback
+  const browserName = browserNameStr ? browserNameStr.charAt(0).toUpperCase() + browserNameStr.slice(1) : 'Browser';
+  const t = i18n[lang];
+  return [
+    { icon: 'puzzle', title: t.desktopExtTitle.replace('{browser}', browserName), desc: t.desktopExtDesc, path: [] },
+    { icon: bData.icon, title: t.desktopFindTitle.replace('{name}', bData.name), desc: t.desktopFindDesc.replace('{name}', bData.name), path: [] },
+    { icon: 'toggle-left', title: t.desktopToggleTitle, desc: t.desktopToggleDesc, path: [] },
+    { icon: 'refresh-cw', title: t.desktopReloadTitle, desc: t.desktopReloadDesc, path: [] }
+  ];
+}
+
+function renderHTMLSteps(steps, guideData, lang) {
+  const t = i18n[lang];
+  return `
+    <div class="guide-header">
+      <div class="gh-icon"><i data-lucide="${guideData.icon}"></i></div>
+      <div>
+        <div class="gh-name">${guideData.name}</div>
+        <div class="gh-desc">${guideData[lang].desc}</div>
+      </div>
+    </div>
+    <div class="steps-list">
+      ${steps.map((s, i) => `
+        <div class="step-item" style="animation-delay:${i*0.06}s">
+          <div class="step-connector">
+            <div class="step-num">${i+1}</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <div class="step-title"><i data-lucide="${s.icon}"></i> ${s.title}</div>
+            <div class="step-desc">${s.desc}</div>
+            ${s.path && s.path.length ? `<div class="step-path">${s.path.map(p => p === '›' ? `<span class="path-arrow"><i data-lucide="chevron-right"></i></span>` : `<span class="path-seg">${p}</span>`).join('')}</div>` : ''}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="done-badge"><i data-lucide="check-circle"></i> <span>${t.doneBadge}</span></div>
+  `;
+}
+
+// Generate static built-in sections
+function renderBuiltIn() {
+  const bd = extraBuiltInGuides.braveDesktop;
+  document.getElementById('guide-desktop-brave-builtin').innerHTML = renderHTMLSteps(bd.steps[currentLang], bd, currentLang);
+  
+  const sd = extraBuiltInGuides.safariDesktop;
+  document.getElementById('guide-desktop-safari-builtin').innerHTML = renderHTMLSteps(sd.steps[currentLang], sd, currentLang);
+  
+  // DNS steps
+  const dnsSteps = extraBuiltInGuides.dns[currentLang];
+  document.getElementById('dns-steps-container').innerHTML = dnsSteps.map((s, i) => `
+    <div class="step-item" style="animation-delay:${i*0.06}s">
+      <div class="step-connector"><div class="step-num">${i+1}</div><div class="step-line"></div></div>
+      <div class="step-body">
+        <div class="step-title"><i data-lucide="${s.icon}"></i> ${s.title}</div>
+        <div class="step-desc">${s.desc}</div>
+        ${s.path && s.path.length ? `<div class="step-path">${s.path.map(p => p === '›' ? `<span class="path-arrow"><i data-lucide="chevron-right"></i></span>` : `<span class="path-seg">${p}</span>`).join('')}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function showGuide(context, blockerStr) {
+  const guideData = guidesData[blockerStr];
+  if (!guideData) return;
+
+  let steps, containerId;
+  if (context === 'mobile') {
+    steps = guideData.mobile[currentLang];
+    containerId = 'guide-mobile';
+    activeGuides.mobile = blockerStr;
+  } else {
+    const browserKey = context.replace('desktop-', '');
+    steps = getDesktopSteps(guideData, browserKey, currentLang);
+    containerId = `guide-${context}`;
+    activeGuides.desktop = { context, blockerStr };
+  }
+
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const allChips = container.closest('.content-section, .br-panel')?.querySelectorAll('.blocker-chip') || [];
+  allChips.forEach(c => c.classList.remove('active'));
+  // Determine active chip via event if triggered by click
+  if (window.event && window.event.currentTarget) {
+      window.event.currentTarget.classList.add('active');
+  } else {
+      // Manual re-highlighting logic during lang switch
+      const chipContainer = container.previousElementSibling;
+      if (chipContainer && chipContainer.classList.contains('blockers-grid')) {
+          const index = Object.keys(guidesData).indexOf(blockerStr);
+          // approximation, assumes order
+          const chip = Array.from(chipContainer.children).find(c => c.innerHTML.includes(guideData.name));
+          if(chip) chip.classList.add('active');
+      }
+  }
+
+  container.innerHTML = renderHTMLSteps(steps, guideData, currentLang);
+  container.classList.add('visible');
+  lucide.createIcons(); // refresh icons in newly created HTML
+  
+  // Smooth scroll to container only if triggered by user click
+  if (window.event) {
+    container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+// ═══ INTERACTIVITY ═══
+
+function selectDevice(device) {
+  document.querySelectorAll('.dev-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + device).classList.add('active');
+  document.querySelectorAll('.content-section').forEach(s => s.classList.remove('visible'));
+  document.getElementById('section-' + device).classList.add('visible');
+
+  if (device === 'mobile') {
+    document.getElementById('dns-section').style.display = 'block';
+  } else {
+    document.getElementById('dns-section').style.display = 'none';
+  }
+
+  document.getElementById('section-' + device).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function switchBrowser(browser) {
+  document.querySelectorAll('.br-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.br-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('br-' + browser).classList.add('active');
+  document.getElementById('panel-' + browser).classList.add('active');
+}
+
+// ═══ I18N / LANGUAGE ═══
+
+function changeLanguage(lang) {
+  currentLang = lang;
+  
+  // Update body font class for Bengali
+  if(lang === 'bn') document.body.classList.add('lang-bn');
+  else document.body.classList.remove('lang-bn');
+
+  // Update static texts
+  const dict = i18n[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key]) el.innerHTML = dict[key];
+  });
+
+  // Re-render built-ins & active dynamic guides
+  renderBuiltIn();
+  if (activeGuides.mobile) showGuide('mobile', activeGuides.mobile);
+  if (activeGuides.desktop) showGuide(activeGuides.desktop.context, activeGuides.desktop.blockerStr);
+  
+  lucide.createIcons();
+}
+
+// ═══ THEME TOGGLE ═══
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  const newTheme = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  
+  // Update icon
+  const iconNode = document.getElementById('themeIcon');
+  if (newTheme === 'dark') {
+      iconNode.setAttribute('data-lucide', 'sun');
+  } else {
+      iconNode.setAttribute('data-lucide', 'moon');
+  }
+  lucide.createIcons();
+}
+
+// ═══ SCROLL PROGRESS & TOP BTN ═══
+window.addEventListener('scroll', () => {
+  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = (winScroll / height) * 100;
+  document.getElementById('scrollProgress').style.width = scrolled + '%';
+
+  const topBtn = document.getElementById('scrollTopBtn');
+  if (winScroll > 300) topBtn.classList.add('visible');
+  else topBtn.classList.remove('visible');
+});
+
+// ═══ INIT ═══
+document.addEventListener('DOMContentLoaded', () => {
+  // Init Icons
+  lucide.createIcons();
+  
+  // Init Language
+  changeLanguage('en');
+
+  // Auto-detect system theme preference initially
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.getElementById('themeIcon').setAttribute('data-lucide', 'moon');
+    lucide.createIcons();
+  }
+});
+</script>
+</body>
+</html>
+
